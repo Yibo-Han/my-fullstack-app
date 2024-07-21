@@ -4,6 +4,7 @@ import type { FormProps } from 'antd';
 import { Button, Checkbox, Form, Input, Typography} from 'antd';
 import Link from 'next/link';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { useRouter } from 'next/navigation';
 
 type FieldType = {
   username?: string;
@@ -13,8 +14,10 @@ type FieldType = {
 
 const LoginPage = () => {
   const { Title } = Typography;
+  const router = useRouter()
   const handleFinish: FormProps<FieldType>['onFinish'] = (values) => {
     console.log('Success:', values);
+    router.push("/users/1");
   };
   
   return (
@@ -53,7 +56,7 @@ const LoginPage = () => {
 
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
             <Button type="primary" htmlType="submit">
-              Submit
+              Log in
             </Button>
           </Form.Item>
         </Form>
