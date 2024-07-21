@@ -5,7 +5,6 @@ export default function Home() {
   return (
     <>
       <div>Home Page</div>
-      <Button type = "primary">Check</Button>
     </>
   );
 }
