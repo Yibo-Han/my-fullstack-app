@@ -18,7 +18,9 @@ export default function UserLayout({
         <Layout style = {{minHeight: "100vh"}}>
             <Sider style = {{backgroundColor: colorBgContainer}}><SideBar id = {params.id}/></Sider>
             <Layout>
-                <Header style = {{backgroundColor: colorBgContainer}}><Title>Teaching Service System</Title></Header>
+                <Header style = {{backgroundColor: colorBgContainer}} className="flex justify-center items-center">
+                    <Title>Teaching Service System</Title>
+                </Header>
                 <Content>{children}</Content>
             </Layout>
         </Layout>
