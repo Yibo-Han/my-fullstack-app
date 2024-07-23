@@ -1,14 +1,17 @@
 'use client'
 import React from 'react';
 import type { FormProps } from 'antd';
-import { Button, Form, Input, Typography } from 'antd';
+import { Button, Divider, Form, Input, Typography } from 'antd';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const RegisterPage = () => {
   const { Title } = Typography;
+  const router = useRouter()
 
   const handleFinish: FormProps['onFinish'] = (values) => {
     console.log('Success:', values);
+    router.push("/users/1")
   };
 
   const formItemLayout = {
@@ -30,6 +33,7 @@ const RegisterPage = () => {
             <Title level={2}>Registration</Title>
           </div>
           <Form {...formItemLayout} name="register" onFinish={handleFinish}>
+            <Divider>Personal Information</Divider>
             <Form.Item
               label="User Name"
               name="username"
@@ -42,7 +46,7 @@ const RegisterPage = () => {
               name="password"
               rules={[{ required: true }]}
             >
-              <Input />
+              <Input.Password />
             </Form.Item>
             <Form.Item
               label="Email Address"
@@ -58,6 +62,7 @@ const RegisterPage = () => {
             >
               <Input />
             </Form.Item>
+            <Divider>Bank Information</Divider>
             <Form.Item
               label="Bank Name"
               name="bankname"
@@ -86,9 +91,9 @@ const RegisterPage = () => {
             >
               <Input />
             </Form.Item>
-            <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
+            <Form.Item wrapperCol={{ offset: 10, span: 16 }}>
               <Button type="primary" htmlType="submit">
-                Register
+                Submit
               </Button>
             </Form.Item>
           </Form>
