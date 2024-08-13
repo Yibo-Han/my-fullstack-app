@@ -1,10 +1,11 @@
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 import type { FormProps } from 'antd';
-import { Button, Checkbox, Form, Input, Typography} from 'antd';
+import { Button, Checkbox, Form, Input, message, Typography} from 'antd';
 import Link from 'next/link';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 type FieldType = {
   username?: string;
@@ -15,9 +16,20 @@ type FieldType = {
 const LoginPage = () => {
   const { Title } = Typography;
   const router = useRouter()
-  const handleFinish: FormProps<FieldType>['onFinish'] = (values) => {
-    console.log('Success:', values);
-    router.push("/users/1");
+  const [loading, setLoading] = useState(false);
+  const handleFinish = async (values: {
+    username: string;
+    password: string;
+  }) => {
+    setLoading(true);
+    try {
+      const response = await axios.post("/api/auth/login", values);
+      router.push(`/users/${response.data.userId}`);
+    } catch (error) {
+      message.error("Invalid username or password");
+    } finally {
+      setLoading(false);
+    }
   };
   
   return (
@@ -55,7 +67,7 @@ const LoginPage = () => {
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" loading={loading}>
               Log in
             </Button>
           </Form.Item>

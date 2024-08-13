@@ -26,7 +26,7 @@ const RegisterPage = () => {
       console.log(values);
       const response = await axios.post("/api/auth/register", values);
       console.log(response);
-      //router.push(`/user/${response.data.userId}/info?new=true`);
+      router.push(`/users/${response.data.userId}`);
     } catch (error) {
       message.error("Registration failed");
     } finally {
