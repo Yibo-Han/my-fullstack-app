@@ -11,8 +11,11 @@
   "dependencies": {
     "@ant-design/icons": "^5.4.0",
     "@ant-design/nextjs-registry": "^1.0.0",
+    "@emailjs/browser": "^4.4.1",
     "antd": "^5.19.3",
     "axios": "^1.7.3",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.2",
     "mongoose": "^8.5.2",
     "next": "14.2.5",
     "react": "^18",

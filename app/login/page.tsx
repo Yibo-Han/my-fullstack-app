@@ -24,7 +24,7 @@ const LoginPage = () => {
     setLoading(true);
     try {
       const response = await axios.post("/api/auth/login", values);
-      router.push(`/users/${response.data.userId}`);
+      router.push(`/users/${response.data.userId}/detail`);
     } catch (error) {
       message.error("Invalid username or password");
     } finally {
