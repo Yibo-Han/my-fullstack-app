@@ -10,10 +10,11 @@ import {
   Input,
   Typography,
 } from "antd";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { jsPDF } from "jspdf";
 import emailjs from "@emailjs/browser";
 import "jspdf-autotable";
+import axiosInstance from "@/app/lib/axiosInstance";
 
 const initialData: {
   key: string;
@@ -23,6 +24,11 @@ const initialData: {
   totalStudents: number;
   comment?: string;
 }[] = [];
+
+interface Props {
+  params: { id: string };
+  searchParams: { new: string };
+}
 
 const columns = [
   {
@@ -52,10 +58,24 @@ const columns = [
   },
 ];
 
-const ServiceForm = () => {
+const ServiceForm = ({ params, searchParams }: Props) => {
   const { TextArea } = Input;
   const [services, setServices] = useState(initialData);
   const [totalSum, setTotalSum] = useState(0);
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    // Fetch the user's information
+    const fetchUser = async () => {
+      try {
+        const res = await axiosInstance.get(`/api/users/${params.id}`); // Adjust the endpoint as needed
+        setUser(res.data.user);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+    fetchUser();
+  }, [params.id]);
 
   const formatUnitCode = (unitCode: string) => {
     const match = unitCode.match(/(fit)(\d+)/i);
@@ -92,16 +112,21 @@ const ServiceForm = () => {
   };
 
   const generatePDF = async () => {
+    if (!user) {
+      console.error("User data not loaded yet");
+      return;
+    }
+
     const doc = new jsPDF();
 
-    // 添加文本信息
+    // Adding user's information to the PDF
     doc.setFontSize(12);
-    doc.text("Name: Easy", 10, 10);
-    doc.text("Account Number: 12345678", 10, 20);
-    doc.text("BSB: 123-321", 10, 30);
-    doc.text("Bank Name: ANZ", 10, 40);
+    doc.text(`Name: ${user.username}`, 10, 10);
+    doc.text(`Account Number: ${user.accnum}`, 10, 20);
+    doc.text(`BSB: ${user.bsb}`, 10, 30);
+    doc.text(`Bank Name: ${user.bankname}`, 10, 40);
 
-    // 添加表格
+    // Adding the table
     const tableColumn = [
       "Unit Code",
       "Working Hours",
@@ -129,13 +154,18 @@ const ServiceForm = () => {
       theme: "striped",
       margin: { top: 10 },
     });
+    // Adding the total price to the PDF
+    const finalY = (doc as any).autoTable.previous.finalY || 50; // Get the position of the last row of the table
+    doc.text(`Total Price: AU$ ${totalSum}`, 10, finalY + 10);
     doc.save("invoice.pdf");
+
     const pdfData = doc.output("datauristring");
     console.log(pdfData);
+
     const sendEmail = async (pdfData: string) => {
       const emailParams = {
         to_name: "Team",
-        from_name: "Your Name",
+        from_name: user.username,
         message: "Here is your PDF document.",
         attachment: pdfData,
       };
@@ -149,12 +179,14 @@ const ServiceForm = () => {
         );
         console.log("Email sent successfully:", result.text);
       } catch (error) {
-        console.error("Error sending email");
+        console.error("Error sending email:", error);
       }
     };
 
+    // Uncomment to send email with PDF
     // await sendEmail(pdfData);
   };
+
   const InvoiceForm = () => {
     return (
       <Form
@@ -228,6 +260,7 @@ const ServiceForm = () => {
       </Form>
     );
   };
+
   const { Title } = Typography;
   const ServicesList = () => {
     return (
