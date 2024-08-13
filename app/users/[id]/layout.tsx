@@ -1,29 +1,57 @@
-'use client'
-import { Layout, theme, Typography} from "antd";
-import SideBar from "./SideBar";
+"use client";
+import { Layout, theme, Typography } from "antd";
+import SideBar from "../SideBar";
+import { useState } from "react";
 
 export default function UserLayout({
-    children,
-    params, // will be a page or nested layout
-   }: {
-    children: React.ReactNode
-    params: {id:string}
-   }) {
-    const { Header, Content, Sider } = Layout;
-    const {Title} = Typography;
-    const {
-        token: { colorBgContainer, borderRadiusLG },
-      } = theme.useToken();
-    return (
-        <Layout style = {{minHeight: "100vh"}}>
-            <Sider style = {{backgroundColor: colorBgContainer}}><SideBar id = {params.id}/></Sider>
-            <Layout>
-                <Header style = {{backgroundColor: colorBgContainer}} className="flex justify-center items-center">
-                    <Title>Teaching Service System</Title>
-                </Header>
-                <Content>{children}</Content>
-            </Layout>
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: { id: string };
+}) {
+  const { Header, Content, Sider } = Layout;
+  const { Title } = Typography;
+  const [collapsed, setCollapsed] = useState(false);
+  const {
+    token: { colorBgContainer, borderRadiusLG },
+  } = theme.useToken();
+  return (
+    <section>
+      <Layout style={{ minHeight: "100vh" }}>
+        <Sider
+          style={{ background: colorBgContainer }}
+          collapsible
+          collapsed={collapsed}
+          onCollapse={(value) => setCollapsed(value)}
+          theme="light"
+        >
+          <SideBar id={params.id} />
+        </Sider>
+        <Layout>
+          <Header
+            style={{
+              padding: 0,
+              background: colorBgContainer,
+              marginLeft: "10px",
+              marginTop: "3px",
+            }}
+          >
+            <Title className="flex justify-center items-center">
+              Teaching Service Invoice System
+            </Title>
+          </Header>
+          <Content
+            style={{
+              margin: "10px",
+              background: colorBgContainer,
+              borderRadius: borderRadiusLG,
+            }}
+          >
+            <div className="p-6">{children}</div>
+          </Content>
         </Layout>
-     
-    )
+      </Layout>
+    </section>
+  );
 }

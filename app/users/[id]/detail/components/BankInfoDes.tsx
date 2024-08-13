@@ -1,32 +1,34 @@
-import { Descriptions, DescriptionsProps } from 'antd';
-import React from 'react'
+import { Descriptions } from "antd";
+import type { DescriptionsProps } from "antd";
+import React from "react";
 
-const BankInfoDes = () => {
-    const items: DescriptionsProps['items'] = [
-        {
-          key: '1',
-          label: 'Account Number',
-          children: '12345678',
-        },
-        {
-          key: '2',
-          label: 'BSB',
-          children: '123-123',
-        },
-        {
-          key: '3',
-          label: 'Account Name',
-          children: 'easy',
-        },
-        {
-          key: '4',
-          label: 'Bank Name',
-          children: 'ANZ',
-        },
-      ];
+const BankInfoDes = ({
+  accnum,
+  bsb,
+  accname,
+  bankname,
+}: {
+  accnum: string;
+  bsb: string;
+  accname: string;
+  bankname: string;
+}) => {
+  const items: DescriptionsProps["items"] = [
+    { key: 1, label: "Account Number", children: accnum },
+    { key: 2, label: "BSB", children: bsb },
+    { key: 3, label: "Account Name", children: accname },
+    { key: 4, label: "Bank Name", children: bankname },
+  ];
   return (
-    <Descriptions title="Bank Information" bordered items={items} />
-  )
-}
+    <div>
+      <Descriptions
+        title="Bank Information"
+        items={items}
+        bordered
+        style={{ maxWidth: 1000 }}
+      />
+    </div>
+  );
+};
 
-export default BankInfoDes
+export default BankInfoDes;
