@@ -1,17 +1,37 @@
 'use client'
-import React from 'react';
+import React, { useState } from 'react';
 import type { FormProps } from 'antd';
-import { Button, Divider, Form, Input, Typography } from 'antd';
+import { Button, Divider, Form, Input, message, Typography } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 const RegisterPage = () => {
   const { Title } = Typography;
-  const router = useRouter()
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
-  const handleFinish: FormProps['onFinish'] = (values) => {
-    console.log('Success:', values);
-    router.push("/users/1")
+  const handleFinish = async (values: {
+    username: string;
+    password: string;
+    email: string;
+    phone: string;
+    accnum: string;
+    bsb: string;
+    accname: string;
+    bankname: string;
+  }) => {
+    setLoading(true);
+    try {
+      console.log(values);
+      const response = await axios.post("/api/auth/register", values);
+      console.log(response);
+      //router.push(`/user/${response.data.userId}/info?new=true`);
+    } catch (error) {
+      message.error("Registration failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const formItemLayout = {
@@ -92,7 +112,7 @@ const RegisterPage = () => {
               <Input />
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 10, span: 16 }}>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" htmlType="submit" loading={loading}>
                 Submit
               </Button>
             </Form.Item>
