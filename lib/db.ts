@@ -3,8 +3,7 @@ declare global {
   var mongoose: any;
 }
 
-const MONGODB_URI =
-  "mongodb+srv://yibhan:hybxsyy3672@cluster1.weh07.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1";
+const MONGODB_URI = process.env.MONGODB_URI!; 
 
 if (!MONGODB_URI) {
   throw new Error(
